@@ -26,7 +26,6 @@ A personal project to explore chess engine integration, Docker orchestration, We
 - The results are broadcast back to the frontend via **WebSockets**.
 
 ### Frontend
-#### Key Features:
 - **Stockfish Connection**
 - **SVG Overlay Tools**  
   Visual elements (arrows, dots) drawn over the Lichess board.
