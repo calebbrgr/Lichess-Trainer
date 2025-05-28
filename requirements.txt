@@ -1,0 +1,9 @@
+Flask==2.3.2
+celery==5.3.4
+redis==5.0.3
+flask-socketio==5.3.6
+requests
+beautifulsoup4
+stockfish
+chess
+rq

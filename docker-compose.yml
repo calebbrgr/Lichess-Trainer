@@ -1,0 +1,41 @@
+version: "3.9"
+services:
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass ""
+  
+  redis-insight:
+    image: redis/redisinsight:latest
+    ports:
+      - "5540:5540"
+    depends_on:
+      - redis
+
+  flask:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - PYTHONPATH=/app
+      - REDIS_URL=redis://redis:6379
+      - FLASK_ENV=development
+    volumes:
+      - .:/app
+      - ./engine/stockfish:/app/engine/stockfish  # Mounts engine
+    depends_on:
+      - redis
+    command: 
+      python -m flaskapp.main
+
+  celery:
+    build: .
+    environment:
+      - PYTHONPATH=/app
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - .:/app
+      - ./engine/stockfish:/app/engine/stockfish  # Mounts engine
+    command:
+      celery -A flaskapp.celery_worker.celery_app worker --loglevel=info
