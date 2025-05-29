@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Lichess Trainer v0.1.0
+// @name         Lichess Trainer v0.1.1
 // @namespace   Violentmonkey Scripts
 // @match        https://lichess.org/*
 // @grant       none
@@ -13,10 +13,10 @@
 
 (function () {
   	//GLOBAL VARS
-    let playerName = "lichessusername"
+    let playerName = "lichess_username"
     let svgType = "dot"
-  	let playerSpyEnabled = true
-  	let evalBarEnabled = false
+    let playerSpyEnabled = true
+    let evalBarEnabled = false
  
     console.log("script loaded")
     'use strict';
@@ -85,7 +85,9 @@
     function getWindow() {
         const url = window.location.href;
         console.log(url)
-        const regex = /^https:\/\/lichess\.org\/([a-zA-Z0-9]{12})$/;
+        //const regex = /^https:\/\/lichess\.org\/([a-zA-Z0-9]{12})$/;
+      	//const regex = /^https:\/\/lichess\.org\/([a-zA-Z0-9]{8})(\/black)?$/;
+      	const regex = /^https:\/\/lichess\.org\/([a-zA-Z0-9]{8}|[a-zA-Z0-9]{12})(\/.*)?$/;
         const match = url.match(regex);
         console.log(match)
 
@@ -261,7 +263,8 @@
             let avgNormalized = turn === 'white' ? avgCentipawn : -avgCentipawn;
 						
             let deviation = normalized - avgNormalized;
-						console.log(deviation);
+          	
+						console.log(turn, deviation);
             // Assign colors based on deviation from average (in centipawns)
           	if (deviation <= -300) return '#D12335';        // worst moves
           	if (deviation <= -200) return '#DE3F4F';        // bad moves
@@ -420,17 +423,44 @@
         const avgCentipawn = validMovesCount > 0 ? totalCentipawn / validMovesCount : 0;
  
 
-        moves.forEach(move => {
+        let filteredMoves = moves;
+
+        if (svgType === "dot") {
+            const isWhite = turn === "w"; // assumes `turn` is 'w' or 'b'
+            const bestMovesMap = new Map();
+
+            moves.forEach(move => {
+                const fromSquare = move.Move.slice(0, 2);
+                const centipawn = move.Centipawn;
+
+                if (!bestMovesMap.has(fromSquare)) {
+                    bestMovesMap.set(fromSquare, move);
+                } else {
+                    const existingMove = bestMovesMap.get(fromSquare);
+                    const isBetterForWhite = isWhite && centipawn > existingMove.Centipawn;
+                    const isBetterForBlack = !isWhite && centipawn < existingMove.Centipawn;
+
+                    if (isBetterForWhite || isBetterForBlack) {
+                        bestMovesMap.set(fromSquare, move);
+                    }
+                }
+            });
+
+            filteredMoves = Array.from(bestMovesMap.values());
+        }
+
+        filteredMoves.forEach(move => {
             const fromSquare = move.Move.slice(0, 2);
             const toSquare = move.Move.slice(2, 4);
             const centipawn = move.Centipawn;
             const type = svgType;
+
             if (move.Mate !== null) {
                 displaySvg(type, fromSquare, toSquare, "#bf00ff", currentColor); // Magenta for mates
             } else {
                 let absCentipawn = Math.abs(centipawn);
                 let absAvg = Math.abs(avgCentipawn);
-              	console.log(centipawn, avgCentipawn, fromSquare, toSquare, currentColor);
+                console.log(centipawn, avgCentipawn, fromSquare, toSquare, currentColor);
                 const color = getColorBasedOnDeviation(avgCentipawn, centipawn, turn);
                 displaySvg(type, fromSquare, toSquare, color, currentColor);
             }
