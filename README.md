@@ -27,6 +27,7 @@ A personal project to explore chess engine integration, Docker orchestration, We
 - The results are broadcast back to the frontend via **WebSockets**.
 
 ### Frontend
+#### Key features:
 - **Stockfish Connection**
 
 - **SVG Overlay Tools**  
