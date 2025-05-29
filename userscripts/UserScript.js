@@ -652,10 +652,8 @@
     const socket = io.connect('http://localhost:5000');  // Flask WebSocket server
     // Listen for 'socket' events sent by Flask
     socket.on('socket', function (data) {
-        console.log('Received socket data:', data);
-
         if (data.status === 1) {
-            console.log("socket data:", data);
+	    console.log('Received socket data:', data);
             //session.moveStack.pop();
             clearSvg();
             displaySvgFromMoveData(data);
