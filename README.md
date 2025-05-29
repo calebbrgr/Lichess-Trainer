@@ -1,4 +1,4 @@
-# ♟️ Lichess Trainer
+# ♟️ Lichess Live Analysis
 
 A personal project to explore chess engine integration, Docker orchestration, WebSocket communication, and UI augmentation via userscripts.
 
