@@ -1,6 +1,7 @@
-# ♟️ Lichess Live Analysis
-
+# ♟️ Lichess Live Analysis -- A Training Tool for Chess!
 A personal project to explore chess engine integration, Docker orchestration, WebSocket communication, and UI augmentation via userscripts.
+
+![demo](./demo.gif)
 
 ---
 
