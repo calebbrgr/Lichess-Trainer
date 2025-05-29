@@ -28,12 +28,15 @@ A personal project to explore chess engine integration, Docker orchestration, We
 
 ### Frontend
 - **Stockfish Connection**
+
 - **SVG Overlay Tools**  
   Visual elements (arrows, dots) drawn over the Lichess board.
   
 - **Rating Spy**  
   Asynchronously fetches opponent's rating history across game variants from the past 6 months.
+  
   ![rating_spy](./rating_spy.png)
+  
 - **Eval Bar**  
   Displays centipawn evaluation in a fixed horizontal bar at the bottom of the screen.
 
